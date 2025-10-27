@@ -58,7 +58,7 @@ def index():
             height: 100vh;
         }}
         .sidebar {{
-            background: linear-gradient(180deg, #8b7d72 0%, #6b5d52 100%);
+            background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
             border-right: 1px solid #d4af37;
             display: flex;
             flex-direction: column;
@@ -133,7 +133,7 @@ def index():
             padding: 20px 30px 30px;
             border-top: 1px solid rgba(212, 175, 55, 0.3);
             flex-shrink: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(107, 93, 82, 0.8) 20%, #6b5d52 100%);
+            background: linear-gradient(180deg, transparent 0%, rgba(26, 37, 47, 0.8) 20%, #1a252f 100%);
         }}
         .actions h3 {{
             color: white;
@@ -147,7 +147,7 @@ def index():
             display: block;
             padding: 12px 20px;
             background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #6b5d52;
+            color: #2c3e50;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -159,7 +159,7 @@ def index():
         }}
         .btn:hover {{ transform: translateX(5px); }}
         .btn.secondary {{
-            background: linear-gradient(135deg, #8b7d72 0%, #6b5d52 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
             color: #d4af37;
         }}
         .btn.outline {{
@@ -189,7 +189,7 @@ def index():
         }}
         .preview-header .badge {{
             background: #d4af37;
-            color: #6b5d52;
+            color: #2c3e50;
             padding: 6px 12px;
             border-radius: 4px;
             font-size: 12px;
@@ -385,7 +385,7 @@ def submit_form():
         .checkmark {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #8b7d72 0%, #6b5d52 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -398,7 +398,7 @@ def submit_form():
             color: #d4af37;
             font-weight: bold;
         }
-        h1 { color: #6b5d52; font-size: 36px; margin-bottom: 20px; }
+        h1 { color: #2c3e50; font-size: 36px; margin-bottom: 20px; }
         p { color: #666; font-size: 18px; line-height: 1.6; margin-bottom: 15px; }
         .highlight {
             background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
@@ -413,7 +413,7 @@ def submit_form():
             margin-top: 30px;
             padding: 12px 24px;
             background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #6b5d52;
+            color: #2c3e50;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -427,7 +427,7 @@ def submit_form():
         <h1>Thank You!</h1>
         <p>We've received your information and are excited to reconnect with you.</p>
         <div class="highlight">
-            <p style="margin: 0; color: #6b5d52; font-weight: 600;">What happens next?</p>
+            <p style="margin: 0; color: #2c3e50; font-weight: 600;">What happens next?</p>
             <p style="margin: 10px 0 0 0; font-size: 16px;">Your dedicated Seven Gables advisor will reach out within 24 hours to discuss your home's value and explore the possibilities for your next chapter.</p>
         </div>
         <div class="footer">
@@ -453,7 +453,7 @@ def submissions_page():
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('phone_number', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('equity_priority', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('goals', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #d4af37; color: #6b5d52; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
+            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #d4af37; color: #2c3e50; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
         </tr>
         """
     
@@ -480,7 +480,7 @@ def submissions_page():
         }}
         .header h1 {{
             font-size: 32px;
-            color: #6b5d52;
+            color: #2c3e50;
             margin-bottom: 10px;
             font-family: Georgia, serif;
         }}
@@ -491,7 +491,7 @@ def submissions_page():
             margin-top: 15px;
             padding: 10px 20px;
             background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #6b5d52;
+            color: #2c3e50;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -510,7 +510,7 @@ def submissions_page():
             border-collapse: collapse;
         }}
         th {{
-            background: #6b5d52;
+            background: #2c3e50;
             color: white;
             padding: 15px;
             text-align: left;
