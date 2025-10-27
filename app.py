@@ -58,7 +58,7 @@ def index():
             height: 100vh;
         }}
         .sidebar {{
-            background: linear-gradient(180deg, #8b7d72 0%, #6b5d52 100%);
+            background: linear-gradient(180deg, #3d3430 0%, #2a2520 100%);
             border-right: 1px solid #d4af37;
             display: flex;
             flex-direction: column;
@@ -133,7 +133,7 @@ def index():
             padding: 20px 30px 30px;
             border-top: 1px solid rgba(212, 175, 55, 0.3);
             flex-shrink: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(107, 93, 82, 0.8) 20%, #6b5d52 100%);
+            background: linear-gradient(180deg, transparent 0%, rgba(42, 37, 32, 0.8) 20%, #2a2520 100%);
         }}
         .actions h3 {{
             color: white;
