@@ -58,7 +58,7 @@ def index():
             height: 100vh;
         }}
         .sidebar {{
-            background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+            background: linear-gradient(180deg, #8b7d72 0%, #6b5d52 100%);
             border-right: 1px solid #d4af37;
             display: flex;
             flex-direction: column;
@@ -95,7 +95,7 @@ def index():
         }}
         .logo span {{ color: #d4af37; }}
         .tagline {{
-            color: #999;
+            color: #e8e3dd;
             font-size: 14px;
             margin-bottom: 30px;
             padding-bottom: 20px;
@@ -110,7 +110,7 @@ def index():
             border-left: 3px solid #d4af37;
         }}
         .stat-card h3 {{
-            color: #999;
+            color: #e8e3dd;
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -124,7 +124,7 @@ def index():
             line-height: 1;
         }}
         .stat-card .label {{
-            color: #666;
+            color: #d0c5b8;
             font-size: 12px;
             margin-top: 5px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
@@ -133,7 +133,7 @@ def index():
             padding: 20px 30px 30px;
             border-top: 1px solid rgba(212, 175, 55, 0.3);
             flex-shrink: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(26, 37, 47, 0.8) 20%, #1a252f 100%);
+            background: linear-gradient(180deg, transparent 0%, rgba(107, 93, 82, 0.8) 20%, #6b5d52 100%);
         }}
         .actions h3 {{
             color: white;
@@ -147,7 +147,7 @@ def index():
             display: block;
             padding: 12px 20px;
             background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #2c3e50;
+            color: #6b5d52;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -159,7 +159,7 @@ def index():
         }}
         .btn:hover {{ transform: translateX(5px); }}
         .btn.secondary {{
-            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            background: linear-gradient(135deg, #8b7d72 0%, #6b5d52 100%);
             color: #d4af37;
         }}
         .btn.outline {{
@@ -189,7 +189,7 @@ def index():
         }}
         .preview-header .badge {{
             background: #d4af37;
-            color: #2c3e50;
+            color: #6b5d52;
             padding: 6px 12px;
             border-radius: 4px;
             font-size: 12px;
@@ -216,7 +216,7 @@ def index():
         }}
         .zoom-level {{
             font-size: 12px;
-            color: #666;
+            color: #d0c5b8;
             min-width: 45px;
             text-align: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
@@ -241,7 +241,7 @@ def index():
     <div class="dashboard">
         <div class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">Seven <span style="font-style: italic;">Gables</span></div>
+                <img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables Real Estate" style="width: 180px; height: auto; margin-bottom: 15px;" />
                 <div class="tagline">Your Next Chapter Campaign Dashboard</div>
             </div>
             
@@ -385,7 +385,7 @@ def submit_form():
         .checkmark {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+            background: linear-gradient(135deg, #8b7d72 0%, #6b5d52 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -398,8 +398,8 @@ def submit_form():
             color: #d4af37;
             font-weight: bold;
         }
-        h1 { color: #2c3e50; font-size: 36px; margin-bottom: 20px; }
-        p { color: #666; font-size: 18px; line-height: 1.6; margin-bottom: 15px; }
+        h1 { color: #6b5d52; font-size: 36px; margin-bottom: 20px; }
+        p { color: #d0c5b8; font-size: 18px; line-height: 1.6; margin-bottom: 15px; }
         .highlight {
             background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
             padding: 25px;
@@ -407,13 +407,13 @@ def submit_form():
             margin-top: 30px;
             border-left: 4px solid #d4af37;
         }
-        .footer { margin-top: 40px; font-size: 14px; color: #999; font-style: italic; }
+        .footer { margin-top: 40px; font-size: 14px; color: #e8e3dd; font-style: italic; }
         .back-btn {
             display: inline-block;
             margin-top: 30px;
             padding: 12px 24px;
             background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #2c3e50;
+            color: #6b5d52;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -427,7 +427,7 @@ def submit_form():
         <h1>Thank You!</h1>
         <p>We've received your information and are excited to reconnect with you.</p>
         <div class="highlight">
-            <p style="margin: 0; color: #2c3e50; font-weight: 600;">What happens next?</p>
+            <p style="margin: 0; color: #6b5d52; font-weight: 600;">What happens next?</p>
             <p style="margin: 10px 0 0 0; font-size: 16px;">Your dedicated Seven Gables advisor will reach out within 24 hours to discuss your home's value and explore the possibilities for your next chapter.</p>
         </div>
         <div class="footer">
@@ -453,7 +453,7 @@ def submissions_page():
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('phone_number', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('equity_priority', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('goals', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #d4af37; color: #2c3e50; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
+            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #d4af37; color: #6b5d52; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
         </tr>
         """
     
@@ -480,18 +480,18 @@ def submissions_page():
         }}
         .header h1 {{
             font-size: 32px;
-            color: #2c3e50;
+            color: #6b5d52;
             margin-bottom: 10px;
             font-family: Georgia, serif;
         }}
         .header h1 span {{ color: #d4af37; font-style: italic; }}
-        .header p {{ color: #666; }}
+        .header p {{ color: #d0c5b8; }}
         .back-btn {{
             display: inline-block;
             margin-top: 15px;
             padding: 10px 20px;
             background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #2c3e50;
+            color: #6b5d52;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -510,7 +510,7 @@ def submissions_page():
             border-collapse: collapse;
         }}
         th {{
-            background: #2c3e50;
+            background: #6b5d52;
             color: white;
             padding: 15px;
             text-align: left;
@@ -549,7 +549,7 @@ def submissions_page():
                 </tr>
             </thead>
             <tbody>
-                {rows if rows else '<tr><td colspan="8" style="padding: 40px; text-align: center; color: #999;">No submissions yet</td></tr>'}
+                {rows if rows else '<tr><td colspan="8" style="padding: 40px; text-align: center; color: #e8e3dd;">No submissions yet</td></tr>'}
             </tbody>
         </table>
     </div>
