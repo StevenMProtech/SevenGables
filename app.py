@@ -107,7 +107,7 @@ def index():
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 15px;
-            border-left: 3px solid #d4af37;
+            border-left: 3px solid rgba(212, 175, 55, 0.3);
         }}
         .stat-card h3 {{
             color: #e8e3dd;
@@ -120,7 +120,7 @@ def index():
         .stat-card .number {{
             font-size: 36px;
             font-weight: 700;
-            color: #d4af37;
+            color: #ffffff;
             line-height: 1;
         }}
         .stat-card .label {{
