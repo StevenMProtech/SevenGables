@@ -242,7 +242,7 @@ def index():
         <div class="sidebar">
             <div class="sidebar-header">
                 <img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables Real Estate" style="width: 180px; height: auto; margin-bottom: 15px;" />
-                <div class="tagline">Your Next Chapter Campaign Dashboard</div>
+                <div class="tagline">Your Past Client Campaign Dashboard</div>
             </div>
             
             <div class="sidebar-stats">
