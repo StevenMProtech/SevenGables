@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import json
 import os
@@ -29,480 +29,141 @@ def test_page():
 def index():
     submissions = load_submissions()
     total = len(submissions)
-    pending = sum(1 for s in submissions if s.get('status') == 'pending')
-    maximize = sum(1 for s in submissions if s.get('equity_priority') == 'maximize')
-    speed = sum(1 for s in submissions if s.get('equity_priority') == 'speed')
-    balance = sum(1 for s in submissions if s.get('equity_priority') == 'balance')
-    exploring = sum(1 for s in submissions if s.get('equity_priority') == 'exploring')
     
-    # Load email template
-    with open('email_template.html', 'r') as f:
-        email_html = f.read()
+    # Count goals
+    goals_count = {}
+    for s in submissions:
+        goals = s.get('goals', [])
+        if isinstance(goals, str):
+            goals = [goals]
+        for goal in goals:
+            goals_count[goal] = goals_count.get(goal, 0) + 1
+    
+    # Count followup preferences
+    followup_count = {}
+    for s in submissions:
+        followup = s.get('followup', [])
+        if isinstance(followup, str):
+            followup = [followup]
+        for f in followup:
+            followup_count[f] = followup_count.get(f, 0) + 1
     
     return f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>Seven Gables Real Estate Dashboard</title>
+    <title>Seven Gables Campaign Dashboard</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background: #1a1a1a;
+            font-family: Georgia, 'Times New Roman', serif;
+            background: #f8f6f3;
             min-height: 100vh;
         }}
-        .dashboard {{
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            height: 100vh;
-        }}
-        .sidebar {{
-            background: linear-gradient(180deg, #3d3430 0%, #2a2520 100%);
-            border-right: 1px solid #d4af37;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }}
-        .sidebar-header {{
-            padding: 30px 30px 20px;
-            flex-shrink: 0;
-        }}
-        .sidebar-stats {{
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 30px;
-        }}
-        .sidebar-stats::-webkit-scrollbar {{
-            width: 6px;
-        }}
-        .sidebar-stats::-webkit-scrollbar-track {{
-            background: rgba(212, 175, 55, 0.1);
-        }}
-        .sidebar-stats::-webkit-scrollbar-thumb {{
-            background: rgba(212, 175, 55, 0.5);
-            border-radius: 3px;
-        }}
-        .sidebar-stats::-webkit-scrollbar-thumb:hover {{
-            background: rgba(212, 175, 55, 0.7);
+        
+        /* Header */
+        .header {{
+            background: linear-gradient(rgba(26,22,20,0.95), rgba(26,22,20,0.95)), 
+                        url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200') center/cover;
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 3px solid #1a1614;
         }}
         .logo {{
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 10px;
-            font-family: Georgia, serif;
-        }}
-        .logo span {{ color: #d4af37; }}
-        .tagline {{
-            color: #e8e3dd;
-            font-size: 14px;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        }}
-        .stat-card {{
-            background: rgba(212, 175, 55, 0.1);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 3px solid rgba(212, 175, 55, 0.3);
-        }}
-        .stat-card h3 {{
-            color: #e8e3dd;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        }}
-        .stat-card .number {{
-            font-size: 36px;
-            font-weight: 700;
-            color: #ffffff;
-            line-height: 1;
-        }}
-        .stat-card .label {{
-            color: #d0c5b8;
-            font-size: 12px;
-            margin-top: 5px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        }}
-        .actions {{
-            padding: 20px 30px 30px;
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
-            flex-shrink: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(42, 37, 32, 0.8) 20%, #2a2520 100%);
-        }}
-        .actions h3 {{
-            color: white;
-            font-size: 14px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        }}
-        .btn {{
-            display: block;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #6b5d52;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-align: center;
-            transition: all 0.2s;
-            font-size: 14px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        }}
-        .btn:hover {{ transform: translateX(5px); }}
-        .btn.secondary {{
-            background: linear-gradient(135deg, #8b7d72 0%, #6b5d52 100%);
-            color: #d4af37;
-        }}
-        .btn.outline {{
-            background: transparent;
-            border: 2px solid #d4af37;
-            color: #d4af37;
-        }}
-        .preview {{
-            background: #f5f5f5;
-            overflow-y: auto;
-            padding: 40px 20px;
-        }}
-        .preview-header {{
-            background: white;
-            padding: 20px 30px;
+            width: 180px;
+            height: auto;
             margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }}
-        .preview-header h2 {{
-            color: #333;
-            font-size: 20px;
-            font-family: Georgia, serif;
-        }}
-        .preview-header .badge {{
-            background: #d4af37;
-            color: #6b5d52;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        }}
-        .zoom-controls {{
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }}
-        .zoom-btn {{
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        }}
-        .zoom-btn:hover {{
-            background: #e0e0e0;
-        }}
-        .zoom-level {{
-            font-size: 12px;
-            color: #d0c5b8;
-            min-width: 45px;
-            text-align: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-        }}
-        .email-container {{
-            max-width: 650px;
-            margin: 0 auto;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        }}
-        @media (max-width: 1024px) {{
-            .dashboard {{
-                grid-template-columns: 1fr;
-            }}
-            .sidebar {{
-                border-right: none;
-                border-bottom: 1px solid #d4af37;
-            }}
-        }}
-    </style>
-</head>
-<body>
-    <div class="dashboard">
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables Real Estate" style="width: 180px; height: auto; margin-bottom: 15px;" />
-                <div class="tagline">Your Past Client Campaign Dashboard</div>
-            </div>
-            
-            <div class="sidebar-stats">
-                <div class="stat-card">
-                <h3>Total Submissions</h3>
-                <div class="number">{total}</div>
-                <div class="label">All time</div>
-            </div>
-            
-            <div class="stat-card">
-                <h3>Pending Review</h3>
-                <div class="number">{pending}</div>
-                <div class="label">Needs follow-up</div>
-            </div>
-            
-            <div class="stat-card">
-                <h3>Maximize Priority</h3>
-                <div class="number">{maximize}</div>
-                <div class="label">Want $788k</div>
-            </div>
-            
-            <div class="stat-card">
-                <h3>Speed Priority</h3>
-                <div class="number">{speed}</div>
-                <div class="label">Quick timeline</div>
-            </div>
-            
-            <div class="stat-card">
-                <h3>Balanced</h3>
-                <div class="number">{balance}</div>
-                <div class="label">Both matter</div>
-            </div>
-            
-            <div class="stat-card">
-                <h3>Exploring</h3>
-                <div class="number">{exploring}</div>
-                <div class="label">Just curious</div>
-            </div>
-            </div>
-            
-            <div class="actions">
-                <h3>Quick Actions</h3>
-                <a href="/submissions" class="btn">View All Submissions</a>
-                <a href="/export" class="btn secondary">Export to CSV</a>
-                <a href="/api/submissions" class="btn outline">API (JSON)</a>
-            </div>
-        </div>
-        
-        <div class="preview">
-            <div class="preview-header">
-                <div>
-                    <h2>Live Email Campaign Preview</h2>
-                </div>
-                <div class="zoom-controls">
-                    <button class="zoom-btn" onclick="zoomOut()">−</button>
-                    <span class="zoom-level" id="zoomLevel">100%</span>
-                    <button class="zoom-btn" onclick="zoomIn()">+</button>
-                    <div class="badge">LIVE & TESTABLE</div>
-                </div>
-            </div>
-            <script>
-                let currentZoom = 1.0;
-                function zoomIn() {{
-                    if (currentZoom < 1.5) {{
-                        currentZoom += 0.1;
-                        updateZoom();
-                    }}
-                }}
-                function zoomOut() {{
-                    if (currentZoom > 0.5) {{
-                        currentZoom -= 0.1;
-                        updateZoom();
-                    }}
-                }}
-                function updateZoom() {{
-                    document.querySelector('.email-container').style.zoom = currentZoom;
-                    document.getElementById('zoomLevel').textContent = Math.round(currentZoom * 100) + '%';
-                }}
-            </script>
-            <div class="email-container">
-                {email_html}
-            </div>
-        </div>
-    </div>
-</body>
-</html>"""
-
-@app.route('/api/submit', methods=['POST', 'OPTIONS'])
-def submit_form():
-    if request.method == 'OPTIONS':
-        return '', 200
-    
-    submissions = load_submissions()
-    
-    new_submission = {
-        'id': len(submissions) + 1,
-        'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'email': request.form.get('email', ''),
-        'first_name': request.form.get('firstName', ''),
-        'last_name': request.form.get('lastName', ''),
-        'equity_priority': request.form.get('equity_priority', ''),
-        'goals': ','.join(request.form.getlist('goals')),
-        'goals_text': request.form.get('goalsText', ''),
-        'phone_number': request.form.get('phoneNumber', ''),
-        'wants_equity_report': request.form.get('wantsReport') == 'yes',
-        'wants_expert_contact': request.form.get('wantsExpert') == 'yes',
-        'status': 'pending'
-    }
-    
-    submissions.insert(0, new_submission)
-    save_submissions(submissions)
-    
-    return """<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You - Seven Gables Real Estate</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            background: white;
-            padding: 60px 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            text-align: center;
-        }
-        .logo { font-size: 32px; font-weight: 700; margin-bottom: 30px; }
-        .logo span { color: #d4af37; font-style: italic; }
-        .checkmark {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #8b7d72 0%, #6b5d52 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-        }
-        .checkmark::after {
-            content: "✓";
-            font-size: 48px;
-            color: #d4af37;
-            font-weight: bold;
-        }
-        h1 { color: #6b5d52; font-size: 36px; margin-bottom: 20px; }
-        p { color: #d0c5b8; font-size: 18px; line-height: 1.6; margin-bottom: 15px; }
-        .highlight {
-            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 30px;
-            border-left: 4px solid #d4af37;
-        }
-        .footer { margin-top: 40px; font-size: 14px; color: #e8e3dd; font-style: italic; }
-        .back-btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #6b5d52;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="logo">Seven <span>Gables</span></div>
-        <div class="checkmark"></div>
-        <h1>Thank You!</h1>
-        <p>We've received your information and are excited to reconnect with you.</p>
-        <div class="highlight">
-            <p style="margin: 0; color: #6b5d52; font-weight: 600;">What happens next?</p>
-            <p style="margin: 10px 0 0 0; font-size: 16px;">Your dedicated Seven Gables advisor will reach out within 24 hours to discuss your home's value and explore the possibilities for your next chapter.</p>
-        </div>
-        <div class="footer">
-            <p>49 years of Southern California expertise.<br>Independent. Forward-thinking. Built on relationships.</p>
-        </div>
-        <a href="/" class="back-btn">Back to Dashboard</a>
-    </div>
-</body>
-</html>"""
-
-@app.route('/submissions')
-def submissions_page():
-    submissions = load_submissions()
-    
-    rows = ""
-    for s in submissions:
-        rows += f"""
-        <tr>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('id', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('timestamp', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('first_name', '')} {s.get('last_name', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('email', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('phone_number', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('equity_priority', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('goals', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #d4af37; color: #6b5d52; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
-        </tr>
-        """
-    
-    return f"""<!DOCTYPE html>
-<html>
-<head>
-    <title>Submissions - Seven Gables Real Estate</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: #f5f5f5;
-            padding: 40px 20px;
-        }}
-        .header {{
-            max-width: 1400px;
-            margin: 0 auto 30px;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }}
         .header h1 {{
+            color: white;
             font-size: 32px;
-            color: #6b5d52;
-            margin-bottom: 10px;
-            font-family: Georgia, serif;
+            font-weight: 300;
+            font-style: italic;
+            margin-bottom: 8px;
         }}
-        .header h1 span {{ color: #d4af37; font-style: italic; }}
-        .header p {{ color: #d0c5b8; }}
-        .back-btn {{
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #d4af37 0%, #c9a22e 100%);
-            color: #6b5d52;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
+        .header p {{
+            color: rgba(255,255,255,0.8);
+            font-size: 15px;
+            font-weight: 300;
         }}
+        
+        /* Container */
         .container {{
             max-width: 1400px;
             margin: 0 auto;
+            padding: 40px 20px;
+        }}
+        
+        /* Stats Grid */
+        .stats-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }}
+        .stat-card {{
             background: white;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            border: 1px solid #e0ddd8;
+            box-shadow: 0 2px 8px rgba(26,22,20,0.08);
+        }}
+        .stat-label {{
+            color: #666;
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }}
+        .stat-value {{
+            color: #1a1614;
+            font-size: 42px;
+            font-weight: 400;
+        }}
+        
+        /* Submissions Table */
+        .table-container {{
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0ddd8;
+            box-shadow: 0 2px 8px rgba(26,22,20,0.08);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }}
+        .table-header {{
+            background: #1a1614;
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }}
+        .table-header h2 {{
+            font-size: 22px;
+            font-weight: 400;
+        }}
+        .export-btn {{
+            background: white;
+            color: #1a1614;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: Georgia, serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }}
+        .export-btn:hover {{
+            background: #f8f6f3;
+        }}
+        .table-wrapper {{
             overflow-x: auto;
         }}
         table {{
@@ -510,71 +171,262 @@ def submissions_page():
             border-collapse: collapse;
         }}
         th {{
-            background: #6b5d52;
-            color: white;
-            padding: 15px;
+            background: #fafaf8;
+            color: #1a1614;
+            font-weight: 400;
             text-align: left;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 1px;
+            padding: 18px 20px;
+            font-size: 14px;
+            border-bottom: 2px solid #e0ddd8;
+            white-space: nowrap;
         }}
         td {{
-            font-size: 14px;
+            padding: 18px 20px;
+            border-bottom: 1px solid #f0ede8;
             color: #333;
+            font-size: 14px;
+            font-weight: 300;
         }}
         tr:hover {{
-            background: #fafafa;
+            background: #fafaf8;
+        }}
+        .email-cell {{
+            color: #1a1614;
+            font-weight: 400;
+        }}
+        .goals-cell {{
+            max-width: 300px;
+            line-height: 1.6;
+        }}
+        .timestamp {{
+            color: #666;
+            font-size: 13px;
+        }}
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {{
+            .header {{
+                padding: 30px 20px;
+            }}
+            .header h1 {{
+                font-size: 24px;
+            }}
+            .logo {{
+                width: 140px;
+            }}
+            .container {{
+                padding: 30px 15px;
+            }}
+            .stats-grid {{
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }}
+            .stat-card {{
+                padding: 25px;
+            }}
+            .stat-value {{
+                font-size: 36px;
+            }}
+            .table-header {{
+                padding: 20px;
+            }}
+            .table-header h2 {{
+                font-size: 18px;
+            }}
+            th, td {{
+                padding: 12px 15px;
+                font-size: 13px;
+            }}
+        }}
+        
+        /* Empty State */
+        .empty-state {{
+            text-align: center;
+            padding: 60px 30px;
+            color: #666;
+        }}
+        .empty-state p {{
+            font-size: 16px;
+            font-weight: 300;
         }}
     </style>
 </head>
 <body>
+    <!-- Header -->
     <div class="header">
-        <h1>Seven <span>Gables</span> Real Estate</h1>
-        <p>All Submissions ({len(submissions)} total)</p>
-        <a href="/" class="back-btn">← Back to Dashboard</a>
+        <img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables" class="logo">
+        <h1>Past Client Campaign Dashboard</h1>
+        <p>Track engagement and responses from your equity campaign</p>
     </div>
+    
+    <!-- Container -->
     <div class="container">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Timestamp</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Priority</th>
-                    <th>Goals</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rows if rows else '<tr><td colspan="8" style="padding: 40px; text-align: center; color: #e8e3dd;">No submissions yet</td></tr>'}
-            </tbody>
-        </table>
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Submissions</div>
+                <div class="stat-value">{total}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Want Follow-up</div>
+                <div class="stat-value">{followup_count.get('create_plan', 0)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Relocating</div>
+                <div class="stat-value">{goals_count.get('relocate', 0)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Buy Before Sell</div>
+                <div class="stat-value">{goals_count.get('buy_before_sell', 0)}</div>
+            </div>
+        </div>
+        
+        <!-- Submissions Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Recent Submissions</h2>
+                <a href="/export" class="export-btn">Export to CSV</a>
+            </div>
+            <div class="table-wrapper">
+                {"<table>" if total > 0 else ""}
+                    {"<thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Goals</th><th>Location Interest</th><th>Follow-up</th><th>Submitted</th></tr></thead>" if total > 0 else ""}
+                    {"<tbody>" if total > 0 else ""}
+                        {''.join([f"""
+                        <tr>
+                            <td>{s.get('firstName', '')} {s.get('lastName', '')}</td>
+                            <td class="email-cell">{s.get('email', '')}</td>
+                            <td>{s.get('phone', 'N/A')}</td>
+                            <td class="goals-cell">{', '.join(s.get('goals', [])) if isinstance(s.get('goals'), list) else s.get('goals', 'N/A')}</td>
+                            <td>{s.get('move_details', 'N/A')}</td>
+                            <td>{'Yes' if 'create_plan' in (s.get('followup', []) if isinstance(s.get('followup'), list) else [s.get('followup', '')]) else 'No'}</td>
+                            <td class="timestamp">{s.get('timestamp', 'N/A')}</td>
+                        </tr>
+                        """ for s in reversed(submissions)])}
+                    {"</tbody>" if total > 0 else ""}
+                {"</table>" if total > 0 else "<div class='empty-state'><p>No submissions yet. Share your campaign to start collecting responses.</p></div>"}
+            </div>
+        </div>
     </div>
 </body>
-</html>"""
+</html>
+"""
+
+@app.route('/api/submit', methods=['POST'])
+def submit():
+    try:
+        data = request.form.to_dict(flat=False)
+        
+        # Process form data
+        submission = {{
+            'email': data.get('email', [''])[0],
+            'firstName': data.get('firstName', [''])[0],
+            'lastName': data.get('lastName', [''])[0],
+            'phone': data.get('phone', [''])[0],
+            'goals': data.get('goals', []),
+            'move_details': data.get('move_details', [''])[0],
+            'followup': data.get('followup', []),
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }}
+        
+        submissions = load_submissions()
+        submissions.append(submission)
+        save_submissions(submissions)
+        
+        return '''
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Thank You - Seven Gables</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+                body {{
+                    font-family: Georgia, 'Times New Roman', serif;
+                    background: linear-gradient(rgba(26,22,20,0.95), rgba(26,22,20,0.95)), 
+                                url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200') center/cover;
+                    min-height: 100vh;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                }}
+                .container {{
+                    background: white;
+                    max-width: 600px;
+                    width: 100%;
+                    padding: 60px 40px;
+                    text-align: center;
+                    border-radius: 8px;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                }}
+                .logo {{
+                    width: 160px;
+                    margin-bottom: 30px;
+                }}
+                h1 {{
+                    color: #1a1614;
+                    font-size: 36px;
+                    font-weight: 300;
+                    margin-bottom: 20px;
+                }}
+                p {{
+                    color: #666;
+                    font-size: 18px;
+                    line-height: 1.7;
+                    font-weight: 300;
+                    margin-bottom: 15px;
+                }}
+                .highlight {{
+                    color: #1a1614;
+                    font-weight: 400;
+                }}
+                @media (max-width: 600px) {{
+                    .container {{
+                        padding: 40px 30px;
+                    }}
+                    h1 {{
+                        font-size: 28px;
+                    }}
+                    p {{
+                        font-size: 16px;
+                    }}
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables" class="logo">
+                <h1>Thank You!</h1>
+                <p>We've received your information.</p>
+                <p class="highlight">Michelle will reach out within 24 hours with your custom plan.</p>
+            </div>
+        </body>
+        </html>
+        '''
+    except Exception as e:
+        return jsonify({{'error': str(e)}}), 500
 
 @app.route('/export')
-def export_csv():
+def export():
     submissions = load_submissions()
     
-    csv_content = "ID,Timestamp,First Name,Last Name,Email,Phone,Equity Priority,Goals,Goals Text,Wants Report,Wants Expert,Status\n"
-    
+    csv_content = "Name,Email,Phone,Goals,Location Interest,Follow-up,Timestamp\\n"
     for s in submissions:
-        csv_content += f"{s.get('id', '')},{s.get('timestamp', '')},{s.get('first_name', '')},{s.get('last_name', '')},{s.get('email', '')},{s.get('phone_number', '')},{s.get('equity_priority', '')},\"{s.get('goals', '')}\",\"{s.get('goals_text', '')}\",{s.get('wants_equity_report', False)},{s.get('wants_expert_contact', False)},{s.get('status', '')}\n"
+        name = f"{{s.get('firstName', '')}} {{s.get('lastName', '')}}"
+        email = s.get('email', '')
+        phone = s.get('phone', 'N/A')
+        goals = ', '.join(s.get('goals', [])) if isinstance(s.get('goals'), list) else s.get('goals', 'N/A')
+        move_details = s.get('move_details', 'N/A')
+        followup = 'Yes' if 'create_plan' in (s.get('followup', []) if isinstance(s.get('followup'), list) else [s.get('followup', '')]) else 'No'
+        timestamp = s.get('timestamp', 'N/A')
+        
+        csv_content += f'"{{name}}","{{email}}","{{phone}}","{{goals}}","{{move_details}}","{{followup}}","{{timestamp}}"\\n'
     
-    return Response(
-        csv_content,
-        mimetype="text/csv",
-        headers={"Content-disposition": "attachment; filename=seven_gables_submissions.csv"}
-    )
-
-@app.route('/api/submissions')
-def api_submissions():
-    submissions = load_submissions()
-    return jsonify(submissions)
+    with open('submissions.csv', 'w') as f:
+        f.write(csv_content)
+    
+    return send_file('submissions.csv', as_attachment=True, download_name='seven_gables_submissions.csv')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
