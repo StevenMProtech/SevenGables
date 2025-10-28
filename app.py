@@ -354,7 +354,8 @@ def submit_form():
         'equity_priority': request.form.get('equity_priority', ''),
         'goals': ','.join(request.form.getlist('goals')),
         'goals_text': request.form.get('goalsText', ''),
-        'phone_number': request.form.get('phoneNumber', ''),
+        'phone_number': request.form.get('phone', ''),
+        'call_past_client': 'yes' if request.form.get('create_plan') == 'on' else 'no',
         'wants_equity_report': request.form.get('wantsReport') == 'yes',
         'wants_expert_contact': request.form.get('wantsExpert') == 'yes',
         'status': 'pending'
@@ -495,9 +496,9 @@ def submissions_page():
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: white; color: #6b5d52; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
                 <select style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; font-size: 14px;">
-                    <option value="">Select...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
+                    <option value="" {'selected' if s.get('call_past_client', '') == '' else ''}>Select...</option>
+                    <option value="yes" {'selected' if s.get('call_past_client', '') == 'yes' else ''}>Yes</option>
+                    <option value="no" {'selected' if s.get('call_past_client', '') == 'no' else ''}>No</option>
                 </select>
             </td>
         </tr>
