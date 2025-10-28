@@ -355,7 +355,7 @@ def submit_form():
         'goals': ','.join(request.form.getlist('goals')),
         'goals_text': request.form.get('goalsText', ''),
         'phone_number': request.form.get('phone', ''),
-        'call_past_client': 'yes' if request.form.get('create_plan') == 'on' else 'no',
+        'call_past_client': 'yes' if request.form.get('followup') == 'create_plan' else 'no',
         'wants_equity_report': request.form.get('wantsReport') == 'yes',
         'wants_expert_contact': request.form.get('wantsExpert') == 'yes',
         'status': 'pending'
