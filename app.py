@@ -19,101 +19,13 @@ def save_submissions(submissions):
     with open(SUBMISSIONS_FILE, 'w') as f:
         json.dump(submissions, f, indent=2)
 
-def get_thankyou_html():
-    return '''<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thank You - Seven Gables Real Estate</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: \'Georgia\', \'Times New Roman\', serif;
-            background: linear-gradient(rgba(26,22,20,0.95), rgba(26,22,20,0.95)), url(\'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200\') center/cover;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            background: white;
-            padding: 60px 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-            text-align: center;
-        }
-        .logo img { width: 160px; margin-bottom: 30px; }
-        .checkmark {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #666 0%, #1a1614 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-        }
-        .checkmark::after {
-            content: "✓";
-            font-size: 48px;
-            color: white;
-            font-weight: bold;
-        }
-        h1 { color: #1a1614; font-size: 36px; margin-bottom: 20px; }
-        p { color: #d0c5b8; font-size: 18px; line-height: 1.6; margin-bottom: 15px; }
-        .highlight {
-            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 30px;
-            border-left: 4px solid #1a1614;
-        }
-        .footer { margin-top: 40px; font-size: 14px; color: #e8e3dd; font-style: italic; }
-        .back-btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 12px 24px;
-            background: #1a1614;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="logo"><img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables"></div>
-        <div class="checkmark"></div>
-        <h1>Thank You!</h1>
-        <p>We\'ve received your information and are excited to reconnect with you.</p>
-        <div class="highlight">
-            <p style="margin: 0; color: #1a1614; font-weight: 600;">What happens next?</p>
-            <p style="margin: 10px 0 0 0; font-size: 16px;">Your dedicated Seven Gables advisor will reach out within 24 hours to discuss your home\'s value and explore the possibilities for your next chapter.</p>
-        </div>
-        <div class="footer">
-            <p>49 years of Southern California expertise.<br>Independent. Forward-thinking. Built on relationships.</p>
-        </div>
-        <a href="/" class="back-btn">Back to Dashboard</a>
-    </div>
-</body>
-</html>'''
-
 @app.route('/test')
 def test_page():
     with open('email_template.html', 'r') as f:
         email_html = f.read()
     return email_html
 
-@app.route('/test-thankyou')
-def test_thankyou():
-    # Return the thank you page HTML directly for testing
-    return get_thankyou_html()
-
-@app.route('/)
+@app.route('/')
 def index():
     submissions = load_submissions()
     total = len(submissions)
@@ -137,7 +49,7 @@ def index():
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
             font-family: 'Georgia', 'Times New Roman', serif;
-            background: #f8f6f3;
+            background: #1a1a1a;
             min-height: 100vh;
         }}
         .dashboard {{
@@ -146,8 +58,8 @@ def index():
             height: 100vh;
         }}
         .sidebar {{
-            background: linear-gradient(180deg, #1a1614 0%, #1a1614 100%);
-            border-right: 1px solid rgba(255,255,255,0.1);
+            background: linear-gradient(180deg, #3d3430 0%, #2a2520 100%);
+            border-right: 1px solid white;
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -165,14 +77,14 @@ def index():
             width: 6px;
         }}
         .sidebar-stats::-webkit-scrollbar-track {{
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.1);
         }}
         .sidebar-stats::-webkit-scrollbar-thumb {{
-            background: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.5);
             border-radius: 3px;
         }}
         .sidebar-stats::-webkit-scrollbar-thumb:hover {{
-            background: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.7);
         }}
         .logo {{
             font-size: 28px;
@@ -187,15 +99,15 @@ def index():
             font-size: 14px;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
         }}
         .stat-card {{
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.1);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 15px;
-            border-left: 3px solid rgba(255,255,255,0.1);
+            border-left: 3px solid rgba(255,255,255,0.3);
         }}
         .stat-card h3 {{
             color: #e8e3dd;
@@ -219,9 +131,9 @@ def index():
         }}
         .actions {{
             padding: 20px 30px 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255,255,255,0.3);
             flex-shrink: 0;
-            background: rgba(0,0,0,0.1);
+            background: linear-gradient(180deg, transparent 0%, rgba(42, 37, 32, 0.8) 20%, #2a2520 100%);
         }}
         .actions h3 {{
             color: white;
@@ -234,8 +146,8 @@ def index():
         .btn {{
             display: block;
             padding: 12px 20px;
-            background: white;
-            color: #1a1614;
+            background: linear-gradient(135deg, white 0%, white 100%);
+            color: #6b5d52;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -247,7 +159,7 @@ def index():
         }}
         .btn:hover {{ transform: translateX(5px); }}
         .btn.secondary {{
-            background: rgba(255,255,255,0.1);
+            background: linear-gradient(135deg, #8b7d72 0%, #6b5d52 100%);
             color: white;
         }}
         .btn.outline {{
@@ -259,9 +171,6 @@ def index():
             background: #f5f5f5;
             overflow-y: auto;
             padding: 40px 20px;
-            height: 100vh;
-            position: relative;
-            z-index: 1;
         }}
         .preview-header {{
             background: white;
@@ -279,8 +188,8 @@ def index():
             font-family: Georgia, serif;
         }}
         .preview-header .badge {{
-            background: #1a1614;
-            color: white;
+            background: white;
+            color: #6b5d52;
             padding: 6px 12px;
             border-radius: 4px;
             font-size: 12px;
@@ -322,44 +231,8 @@ def index():
                 grid-template-columns: 1fr;
             }}
             .sidebar {{
-                height: auto;
                 border-right: none;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-            }}
-            .sidebar-stats {{
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 15px;
-                padding: 20px;
-            }}
-            .stat-card {{
-                margin-bottom: 0;
-            }}
-            .actions {{
-                padding: 20px;
-            }}
-            .preview {{
-                padding: 20px 10px;
-            }}
-        }}
-        @media (max-width: 600px) {{
-            .sidebar-header {{
-                padding: 20px;
-            }}
-            .sidebar-stats {{
-                grid-template-columns: 1fr;
-            }}
-            .stat-card .number {{
-                font-size: 28px;
-            }}
-            .preview-header {{
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
-            }}
-            .zoom-controls {{
-                width: 100%;
-                justify-content: space-between;
+                border-bottom: 1px solid white;
             }}
         }}
     </style>
@@ -482,10 +355,7 @@ def submit_form():
     submissions.insert(0, new_submission)
     save_submissions(submissions)
     
-    return get_thankyou_html()
-
-# OLD CODE BELOW - REMOVE
-_old_thankyou = """<!DOCTYPE html>
+    return """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -495,7 +365,7 @@ _old_thankyou = """<!DOCTYPE html>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Georgia', 'Times New Roman', serif;
-            background: linear-gradient(rgba(26,22,20,0.95), rgba(26,22,20,0.95)), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200') center/cover;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -510,11 +380,12 @@ _old_thankyou = """<!DOCTYPE html>
             box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             text-align: center;
         }
-        .logo img { width: 160px; margin-bottom: 30px; }
+        .logo { font-size: 32px; font-weight: 700; margin-bottom: 30px; }
+        .logo span { color: white; font-style: italic; }
         .checkmark {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #666 0%, #1a1614 100%);
+            background: linear-gradient(135deg, #8b7d72 0%, #6b5d52 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -527,22 +398,22 @@ _old_thankyou = """<!DOCTYPE html>
             color: white;
             font-weight: bold;
         }
-        h1 { color: #1a1614; font-size: 36px; margin-bottom: 20px; }
+        h1 { color: #6b5d52; font-size: 36px; margin-bottom: 20px; }
         p { color: #d0c5b8; font-size: 18px; line-height: 1.6; margin-bottom: 15px; }
         .highlight {
             background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
             padding: 25px;
             border-radius: 12px;
             margin-top: 30px;
-            border-left: 4px solid #1a1614;
+            border-left: 4px solid white;
         }
         .footer { margin-top: 40px; font-size: 14px; color: #e8e3dd; font-style: italic; }
         .back-btn {
             display: inline-block;
             margin-top: 30px;
             padding: 12px 24px;
-            background: #1a1614;
-            color: white;
+            background: linear-gradient(135deg, white 0%, white 100%);
+            color: #6b5d52;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -551,12 +422,12 @@ _old_thankyou = """<!DOCTYPE html>
 </head>
 <body>
     <div class="container">
-        <div class="logo"><img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables"></div>
+        <div class="logo">Seven <span>Gables</span></div>
         <div class="checkmark"></div>
         <h1>Thank You!</h1>
         <p>We've received your information and are excited to reconnect with you.</p>
         <div class="highlight">
-            <p style="margin: 0; color: #1a1614; font-weight: 600;">What happens next?</p>
+            <p style="margin: 0; color: #6b5d52; font-weight: 600;">What happens next?</p>
             <p style="margin: 10px 0 0 0; font-size: 16px;">Your dedicated Seven Gables advisor will reach out within 24 hours to discuss your home's value and explore the possibilities for your next chapter.</p>
         </div>
         <div class="footer">
@@ -582,7 +453,7 @@ def submissions_page():
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('phone_number', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('equity_priority', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('goals', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #1a1614; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
+            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: white; color: #6b5d52; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
         </tr>
         """
     
@@ -609,18 +480,18 @@ def submissions_page():
         }}
         .header h1 {{
             font-size: 32px;
-            color: #1a1614;
+            color: #6b5d52;
             margin-bottom: 10px;
             font-family: Georgia, serif;
         }}
-        .header h1 span {{ color: #1a1614; font-style: italic; }}
+        .header h1 span {{ color: white; font-style: italic; }}
         .header p {{ color: #d0c5b8; }}
         .back-btn {{
             display: inline-block;
             margin-top: 15px;
             padding: 10px 20px;
-            background: #1a1614;
-            color: white;
+            background: linear-gradient(135deg, white 0%, white 100%);
+            color: #6b5d52;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -639,7 +510,7 @@ def submissions_page():
             border-collapse: collapse;
         }}
         th {{
-            background: #1a1614;
+            background: #6b5d52;
             color: white;
             padding: 15px;
             text-align: left;
