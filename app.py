@@ -449,7 +449,7 @@ def submit_form():
         <div class="checkmark"></div>
         <h1>Thank You!</h1>
         <p>{main_message}</p>
-        {f'<p style="font-size: 16px; color: #1a1614; margin-top: 20px;">{goal_text}</p>' if goal_text else ''}
+        {'<p style="font-size: 16px; color: #1a1614; margin-top: 20px;">' + goal_text + '</p>' if goal_text else ''}
         <div class="highlight">
             <p style="margin: 0; color: #6b5d52; font-weight: 600;">What happens next?</p>
             <p style="margin: 10px 0 0 0; font-size: 16px;">{next_steps}</p>
