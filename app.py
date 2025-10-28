@@ -222,9 +222,8 @@ def index():
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
         }}
         .email-container {{
-            max-width: 650px;
+            max-width: 730px;
             margin: 0 auto;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }}
         @media (max-width: 1024px) {{
             .dashboard {{
