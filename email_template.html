@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Equity Update - Seven Gables</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Georgia, 'Times New Roman', serif; background-color: #ffffff;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff;">
+<body style="margin: 0; padding: 0; font-family: Georgia, 'Times New Roman', serif; background-color: #e8e3dd;">
+    <!-- Outer Container for Depth -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #e8e3dd;">
         <tr>
-            <td align="center" style="padding: 0;">
-                <table width="650" cellpadding="0" cellspacing="0" border="0" style="max-width: 650px; background-color: #ffffff; border: 1px solid #d5d5d5;">
+            <td align="center" style="padding: 40px 20px;">
+                <!-- Inner Email Container with Shadow -->
+                <table width="650" cellpadding="0" cellspacing="0" border="0" style="max-width: 650px; background-color: #ffffff; box-shadow: 0 10px 40px rgba(26,22,20,0.15), 0 4px 12px rgba(26,22,20,0.1); border-radius: 8px; overflow: hidden;">
                     
                     <!-- Hero Header with Logo -->
                     <tr>
@@ -110,7 +112,7 @@
                                 </div>
                                 
                                 <!-- Phone (optional) -->
-                                <input type="tel" name="phone" placeholder="Phone (optional)" style="width: 100%; padding: 16px 25px; border: 1px solid #d5d5d5; font-size: 16px; margin-bottom: 25px; box-sizing: border-box; font-family: Georgia, serif; font-weight: 300;">
+                                <input type="tel" name="phone" value="{{ contact.phone }}" placeholder="Phone (optional)" style="width: 100%; padding: 16px 25px; border: 1px solid #d5d5d5; font-size: 16px; margin-bottom: 25px; box-sizing: border-box; font-family: Georgia, serif; font-weight: 300;">
                                 
                                 <!-- Michelle Info Above Button -->
                                 <div style="text-align: center; margin-bottom: 20px;">
