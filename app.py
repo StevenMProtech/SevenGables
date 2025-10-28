@@ -238,6 +238,10 @@ def index():
             .sidebar-stats {{
                 overflow-y: visible;
             }}
+            .preview {{
+                height: auto;
+                min-height: 100vh;
+            }}
         }}
     </style>
 </head>
