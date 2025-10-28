@@ -231,8 +231,12 @@ def index():
                 grid-template-columns: 1fr;
             }}
             .sidebar {{
+                height: auto;
                 border-right: none;
                 border-bottom: 1px solid white;
+            }}
+            .sidebar-stats {{
+                overflow-y: visible;
             }}
         }}
     </style>
