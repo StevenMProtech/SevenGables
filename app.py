@@ -355,7 +355,31 @@ def submit_form():
     submissions.insert(0, new_submission)
     save_submissions(submissions)
     
-    return """<!DOCTYPE html>
+    # Dynamic content based on selections
+    wants_followup = request.form.get('create_plan') == 'on'
+    goals = request.form.getlist('goals')
+    goals_text = request.form.get('goalsText', '')
+    
+    # Determine main message
+    if wants_followup:
+        main_message = "We've received your information and Michelle will reach out within 24 hours."
+        next_steps = "Michelle will create a custom plan tailored to your situation and discuss your home's value and next steps."
+    else:
+        main_message = "We've received your information."
+        next_steps = "We've sent the details to your email. Feel free to reach out to Michelle when you're ready to move forward."
+    
+    # Personalize based on goals
+    goal_text = ""
+    if 'relocate' in goals and goals_text:
+        goal_text = f"We'll help you make your move to {goals_text} as smooth as possible."
+    elif 'upgrade' in goals:
+        goal_text = "We'll show you how to upgrade without the stress of selling first."
+    elif 'downsize' in goals:
+        goal_text = "We'll help you move to something smaller and pocket the difference."
+    elif 'investment' in goals:
+        goal_text = "We'll explore how to turn your equity into additional income or property."
+    
+    return f"""<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -422,13 +446,13 @@ def submit_form():
 </head>
 <body>
     <div class="container">
-        <div class="logo">Seven <span>Gables</span></div>
         <div class="checkmark"></div>
         <h1>Thank You!</h1>
-        <p>We've received your information and are excited to reconnect with you.</p>
+        <p>{main_message}</p>
+        {f'<p style="font-size: 16px; color: #1a1614; margin-top: 20px;">{goal_text}</p>' if goal_text else ''}
         <div class="highlight">
             <p style="margin: 0; color: #6b5d52; font-weight: 600;">What happens next?</p>
-            <p style="margin: 10px 0 0 0; font-size: 16px;">Your dedicated Seven Gables advisor will reach out within 24 hours to discuss your home's value and explore the possibilities for your next chapter.</p>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">{next_steps}</p>
         </div>
         <div class="footer">
             <p>49 years of Southern California expertise.<br>Independent. Forward-thinking. Built on relationships.</p>
