@@ -58,7 +58,7 @@ def index():
             height: 100vh;
         }}
         .sidebar {{
-            background: linear-gradient(180deg, #3d3430 0%, #2a2520 100%);
+            background: #1a1614;
             border-right: 1px solid white;
             display: flex;
             flex-direction: column;
@@ -369,17 +369,17 @@ def submit_form():
         next_steps = "We've sent the details to your email. Feel free to reach out to Michelle when you're ready to move forward."
     
     # Personalize based on goals
-    goal_text = ""
+    goal_html = ""
     if 'relocate' in goals and goals_text:
-        goal_text = f"We'll help you make your move to {goals_text} as smooth as possible."
+        goal_html = '<p style="font-size: 16px; color: #1a1614; margin-top: 20px;">We\'ll help you make your move to ' + goals_text + ' as smooth as possible.</p>'
     elif 'upgrade' in goals:
-        goal_text = "We'll show you how to upgrade without the stress of selling first."
+        goal_html = '<p style="font-size: 16px; color: #1a1614; margin-top: 20px;">We\'ll show you how to upgrade without the stress of selling first.</p>'
     elif 'downsize' in goals:
-        goal_text = "We'll help you move to something smaller and pocket the difference."
+        goal_html = '<p style="font-size: 16px; color: #1a1614; margin-top: 20px;">We\'ll help you move to something smaller and pocket the difference.</p>'
     elif 'investment' in goals:
-        goal_text = "We'll explore how to turn your equity into additional income or property."
+        goal_html = '<p style="font-size: 16px; color: #1a1614; margin-top: 20px;">We\'ll explore how to turn your equity into additional income or property.</p>'
     
-    return f"""<!DOCTYPE html>
+    html_template = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -448,11 +448,11 @@ def submit_form():
     <div class="container">
         <div class="checkmark"></div>
         <h1>Thank You!</h1>
-        <p>{main_message}</p>
-        {'<p style="font-size: 16px; color: #1a1614; margin-top: 20px;">' + goal_text + '</p>' if goal_text else ''}
+        <p>MAIN_MESSAGE_PLACEHOLDER</p>
+        GOAL_HTML_PLACEHOLDER
         <div class="highlight">
             <p style="margin: 0; color: #6b5d52; font-weight: 600;">What happens next?</p>
-            <p style="margin: 10px 0 0 0; font-size: 16px;">{next_steps}</p>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">NEXT_STEPS_PLACEHOLDER</p>
         </div>
         <div class="footer">
             <p>49 years of Southern California expertise.<br>Independent. Forward-thinking. Built on relationships.</p>
@@ -461,6 +461,13 @@ def submit_form():
     </div>
 </body>
 </html>"""
+    
+    # Replace placeholders with actual content
+    html_output = html_template.replace('MAIN_MESSAGE_PLACEHOLDER', main_message)
+    html_output = html_output.replace('GOAL_HTML_PLACEHOLDER', goal_html)
+    html_output = html_output.replace('NEXT_STEPS_PLACEHOLDER', next_steps)
+    
+    return html_output
 
 @app.route('/submissions')
 def submissions_page():
