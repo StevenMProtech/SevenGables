@@ -493,6 +493,13 @@ def submissions_page():
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('equity_priority', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('goals', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: white; color: #6b5d52; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
+            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">
+                <select style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 4px; background: white; font-size: 14px;">
+                    <option value="">Select...</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </td>
         </tr>
         """
     
@@ -506,25 +513,21 @@ def submissions_page():
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: #f5f5f5;
+            background: #1a1614;
             padding: 40px 20px;
         }}
         .header {{
             max-width: 1400px;
             margin: 0 auto 30px;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 0;
         }}
         .header h1 {{
-            font-size: 32px;
-            color: #6b5d52;
+            font-size: 24px;
+            color: white;
             margin-bottom: 10px;
             font-family: Georgia, serif;
         }}
-        .header h1 span {{ color: white; font-style: italic; }}
-        .header p {{ color: #d0c5b8; }}
+        .header p {{ color: #e8e3dd; }}
         .back-btn {{
             display: inline-block;
             margin-top: 15px;
@@ -549,7 +552,7 @@ def submissions_page():
             border-collapse: collapse;
         }}
         th {{
-            background: #6b5d52;
+            background: #1a1614;
             color: white;
             padding: 15px;
             text-align: left;
@@ -569,8 +572,7 @@ def submissions_page():
 </head>
 <body>
     <div class="header">
-        <h1>Seven <span>Gables</span> Real Estate</h1>
-        <p>All Submissions ({len(submissions)} total)</p>
+        <h1>All Submissions ({len(submissions)} total)</h1>
         <a href="/" class="back-btn">← Back to Dashboard</a>
     </div>
     <div class="container">
@@ -585,10 +587,11 @@ def submissions_page():
                     <th>Priority</th>
                     <th>Goals</th>
                     <th>Status</th>
+                    <th>Call Past Client</th>
                 </tr>
             </thead>
             <tbody>
-                {rows if rows else '<tr><td colspan="8" style="padding: 40px; text-align: center; color: #e8e3dd;">No submissions yet</td></tr>'}
+                {rows if rows else '<tr><td colspan="9" style="padding: 40px; text-align: center; color: #999;">No submissions yet</td></tr>'}
             </tbody>
         </table>
     </div>
