@@ -19,13 +19,101 @@ def save_submissions(submissions):
     with open(SUBMISSIONS_FILE, 'w') as f:
         json.dump(submissions, f, indent=2)
 
+def get_thankyou_html():
+    return '''<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You - Seven Gables Real Estate</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: \'Georgia\', \'Times New Roman\', serif;
+            background: linear-gradient(rgba(26,22,20,0.95), rgba(26,22,20,0.95)), url(\'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200\') center/cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+        .logo img { width: 160px; margin-bottom: 30px; }
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #666 0%, #1a1614 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+        .checkmark::after {
+            content: "✓";
+            font-size: 48px;
+            color: white;
+            font-weight: bold;
+        }
+        h1 { color: #1a1614; font-size: 36px; margin-bottom: 20px; }
+        p { color: #d0c5b8; font-size: 18px; line-height: 1.6; margin-bottom: 15px; }
+        .highlight {
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border-left: 4px solid #1a1614;
+        }
+        .footer { margin-top: 40px; font-size: 14px; color: #e8e3dd; font-style: italic; }
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 24px;
+            background: #1a1614;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo"><img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables"></div>
+        <div class="checkmark"></div>
+        <h1>Thank You!</h1>
+        <p>We\'ve received your information and are excited to reconnect with you.</p>
+        <div class="highlight">
+            <p style="margin: 0; color: #1a1614; font-weight: 600;">What happens next?</p>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">Your dedicated Seven Gables advisor will reach out within 24 hours to discuss your home\'s value and explore the possibilities for your next chapter.</p>
+        </div>
+        <div class="footer">
+            <p>49 years of Southern California expertise.<br>Independent. Forward-thinking. Built on relationships.</p>
+        </div>
+        <a href="/" class="back-btn">Back to Dashboard</a>
+    </div>
+</body>
+</html>'''
+
 @app.route('/test')
 def test_page():
     with open('email_template.html', 'r') as f:
         email_html = f.read()
     return email_html
 
-@app.route('/')
+@app.route('/test-thankyou')
+def test_thankyou():
+    # Return the thank you page HTML directly for testing
+    return get_thankyou_html()
+
+@app.route('/)
 def index():
     submissions = load_submissions()
     total = len(submissions)
@@ -394,7 +482,10 @@ def submit_form():
     submissions.insert(0, new_submission)
     save_submissions(submissions)
     
-    return """<!DOCTYPE html>
+    return get_thankyou_html()
+
+# OLD CODE BELOW - REMOVE
+_old_thankyou = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -404,7 +495,7 @@ def submit_form():
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Georgia', 'Times New Roman', serif;
-            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            background: linear-gradient(rgba(26,22,20,0.95), rgba(26,22,20,0.95)), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200') center/cover;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -419,8 +510,7 @@ def submit_form():
             box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             text-align: center;
         }
-        .logo { font-size: 32px; font-weight: 700; margin-bottom: 30px; }
-        .logo span { color: #1a1614; font-style: italic; }
+        .logo img { width: 160px; margin-bottom: 30px; }
         .checkmark {
             width: 80px;
             height: 80px;
@@ -434,7 +524,7 @@ def submit_form():
         .checkmark::after {
             content: "✓";
             font-size: 48px;
-            color: #1a1614;
+            color: white;
             font-weight: bold;
         }
         h1 { color: #1a1614; font-size: 36px; margin-bottom: 20px; }
@@ -451,8 +541,8 @@ def submit_form():
             display: inline-block;
             margin-top: 30px;
             padding: 12px 24px;
-            background: linear-gradient(135deg, #1a1614 0%, #1a1614 100%);
-            color: #1a1614;
+            background: #1a1614;
+            color: white;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
@@ -461,7 +551,7 @@ def submit_form():
 </head>
 <body>
     <div class="container">
-        <div class="logo">Seven <span>Gables</span></div>
+        <div class="logo"><img src="https://raw.githubusercontent.com/StevenMProtech/SevenGables/main/seven%20gables.png" alt="Seven Gables"></div>
         <div class="checkmark"></div>
         <h1>Thank You!</h1>
         <p>We've received your information and are excited to reconnect with you.</p>
@@ -492,7 +582,7 @@ def submissions_page():
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('phone_number', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('equity_priority', '')}</td>
             <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;">{s.get('goals', '')}</td>
-            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #1a1614; color: #1a1614; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
+            <td style="padding: 15px; border-bottom: 1px solid #e0e0e0;"><span style="background: #1a1614; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">{s.get('status', 'pending')}</span></td>
         </tr>
         """
     
@@ -529,8 +619,8 @@ def submissions_page():
             display: inline-block;
             margin-top: 15px;
             padding: 10px 20px;
-            background: linear-gradient(135deg, #1a1614 0%, #1a1614 100%);
-            color: #1a1614;
+            background: #1a1614;
+            color: white;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 600;
