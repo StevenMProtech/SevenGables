@@ -59,7 +59,7 @@ def index():
         }}
         .sidebar {{
             background: linear-gradient(180deg, #1a1614 0%, #1a1614 100%);
-            border-right: 1px solid #1a1614;
+            border-right: 1px solid rgba(255,255,255,0.1);
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -93,7 +93,7 @@ def index():
             margin-bottom: 10px;
             font-family: Georgia, serif;
         }}
-        .logo span {{ color: #1a1614; }}
+        .logo span {{ color: white; }}
         .tagline {{
             color: #e8e3dd;
             font-size: 14px;
@@ -146,7 +146,7 @@ def index():
         .btn {{
             display: block;
             padding: 12px 20px;
-            background: linear-gradient(135deg, #1a1614 0%, #1a1614 100%);
+            background: white;
             color: #1a1614;
             text-decoration: none;
             border-radius: 6px;
@@ -159,18 +159,21 @@ def index():
         }}
         .btn:hover {{ transform: translateX(5px); }}
         .btn.secondary {{
-            background: linear-gradient(135deg, #666 0%, #1a1614 100%);
-            color: #1a1614;
+            background: rgba(255,255,255,0.1);
+            color: white;
         }}
         .btn.outline {{
             background: transparent;
-            border: 2px solid #1a1614;
-            color: #1a1614;
+            border: 2px solid white;
+            color: white;
         }}
         .preview {{
             background: #f5f5f5;
             overflow-y: auto;
             padding: 40px 20px;
+            height: 100vh;
+            position: relative;
+            z-index: 1;
         }}
         .preview-header {{
             background: white;
@@ -189,7 +192,7 @@ def index():
         }}
         .preview-header .badge {{
             background: #1a1614;
-            color: #1a1614;
+            color: white;
             padding: 6px 12px;
             border-radius: 4px;
             font-size: 12px;
